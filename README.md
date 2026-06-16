@@ -1,21 +1,20 @@
-# LLM concept suppression
+# Unlearning to Rest concept suppression method
 
-This repository contains code and configuration material for the Unlearning to
-Rest model construction pipeline. The repository name keeps the original
-misspelling, `llm-concept-supression`, so that existing links remain stable.
+This repository is a paper-specific reproducibility package for the Unlearning
+to Rest model construction method.
 
 Unlearning to Rest is a hybrid concept suppression intervention for a Llama
-instruction model. The study model combined concept saliency pruning,
-vocabulary pruning, and a later repair fine-tuning stage. The released model is
-available through Ollama as `martindisley/unlearning-to-rest`.
+instruction model. The study model presented in the paper combined concept
+saliency pruning, vocabulary pruning, and a later repair fine-tuning stage. The
+released model is available through Ollama as `martindisley/unlearning-to-rest`.
 
 ## Repository status
 
-This is a reviewer-facing reproducibility package rather than a full archive of
-all intermediate artefacts. It includes the code, final configuration, target
-concept definition, and sample data schema needed to inspect and rerun the
-pipeline. It does not include large derived artefacts such as activation caches
-or model checkpoints.
+This repository does not present a general-purpose unlearning tool. It is a
+reviewer-facing reproducibility package for the method and model used in the
+paper. It includes the code, final configuration, target concept definition, and
+sample data schema needed to inspect and rerun the pipeline. It does not include
+large derived artefacts such as activation caches or model checkpoints.
 
 ## Final study configuration
 
