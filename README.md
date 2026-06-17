@@ -131,6 +131,20 @@ Model page:
 https://ollama.com/martindisley/unlearning-to-rest
 ```
 
+## Behavioural validation responses
+
+Matched baseline and Unlearning to Rest responses for appendix/rebuttal drafting
+can be generated through the local Ollama API without loading model weights in
+Python:
+
+```bash
+python scripts/behavioural_validation.py --config-path config-files/behavioural-validation-prompts.json --output-dir outputs/behavioural-validation
+```
+
+The prompt/model defaults are stored in
+`config-files/behavioural-validation-prompts.json`. Generated response files are
+written under `outputs/` and are not intended to be committed by default.
+
 ## Limitations
 
 - This is approximate concept suppression, not certified data deletion.

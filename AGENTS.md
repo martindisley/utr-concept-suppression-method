@@ -9,6 +9,7 @@
 ## Commands
 - Install with the pinned historical environment: `python -m pip install -r requirements.txt`.
 - Run the pipeline with: `python main.py --config-path config-files/chair-3B-hybrid-config.json --log-level INFO`.
+- Generate Ollama-backed behavioural validation responses with: `python scripts/behavioural_validation.py --config-path config-files/behavioural-validation-prompts.json --output-dir outputs/behavioural-validation`.
 - There is no committed test, lint, typecheck, formatter, CI, or pre-commit config; do not invent repo-standard verification commands.
 
 ## Runtime Gotchas
@@ -16,6 +17,7 @@
 - `data/chair-simplified-10k.json` and `data/chair-3B-simplified-activations-10k.npz` are intentionally absent; the sample JSON is schema-only.
 - If the activation cache file at the configured path is absent, `Pruner.prune_concept()` regenerates activations from the full examples and base model, which can require substantial GPU memory and disk space.
 - Running the pipeline writes `logs/app.log` and, with the final config, saves the model/tokenizer under `models/chair-3B-hybrid`.
+- Behavioural validation outputs are written under `outputs/` and are ignored by Git unless explicitly promoted to a tracked artifact.
 
 ## Artifact Rules
 - Do not commit generated data, activation caches, model checkpoints, GGUF files, safetensors, `.bin`, `.pt`, or `.pth` artifacts; `.gitignore` is set up to keep these out.

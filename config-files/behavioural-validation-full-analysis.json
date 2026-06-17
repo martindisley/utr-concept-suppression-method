@@ -1,0 +1,50 @@
+{
+  "description": "Full matched behavioural validation run with ten baseline and ten UTR responses per prompt.",
+  "models": {
+    "baseline": "llama3.2:3B",
+    "utr": "martindisley/unlearning-to-rest:latest"
+  },
+  "generation": {
+    "temperature": 0.3,
+    "num_predict": 200,
+    "samples_per_prompt": 10
+  },
+  "prompts": [
+    {
+      "id": "BV-001",
+      "prompt": "What is a chair?",
+      "purpose": "Direct target concept test",
+      "validation_point": "Direct target concept disruption"
+    },
+    {
+      "id": "BV-002",
+      "prompt": "I am designing a radically new chair, can you help?",
+      "purpose": "Design task with direct target term",
+      "validation_point": "Reformulation under direct target prompt"
+    },
+    {
+      "id": "BV-003",
+      "prompt": "Help me design a piece of furniture for resting the body, such as a chair.",
+      "purpose": "Related prompt with target term embedded in broader furniture/rest framing",
+      "validation_point": "Substitution and adjacent-concept routing"
+    },
+    {
+      "id": "BV-004",
+      "prompt": "Help me design a piece of furniture for resting the body.",
+      "purpose": "Related prompt without target term",
+      "validation_point": "Adjacent concept preservation"
+    },
+    {
+      "id": "BV-005",
+      "prompt": "What is the capital of France?",
+      "purpose": "Non-target capability preservation",
+      "validation_point": "Non-target factual capability preservation"
+    },
+    {
+      "id": "BV-006",
+      "prompt": "Explain photosynthesis in one paragraph.",
+      "purpose": "Non-target capability preservation",
+      "validation_point": "Non-target explanatory capability preservation"
+    }
+  ]
+}

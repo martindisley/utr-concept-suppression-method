@@ -175,6 +175,8 @@ cython_debug/
 # Keep generated data, activation caches, and model weights out of Git.
 config-files/*
 !config-files/chair-3B-hybrid-config.json
+!config-files/behavioural-validation-prompts.json
+!config-files/behavioural-validation-full-analysis.json
 !config-files/README.md
 
 data/*
@@ -183,6 +185,7 @@ data/*
 !data/chair-simplified-sample.json
 
 models/*
+outputs/
 
 # Large derived/model artefacts should never be committed.
 *.npz
