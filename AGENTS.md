@@ -9,7 +9,7 @@
 ## Commands
 - Install with the pinned historical environment: `python -m pip install -r requirements.txt`.
 - Run the pipeline with: `python main.py --config-path config-files/chair-3B-hybrid-config.json --log-level INFO`.
-- Generate Ollama-backed behavioural validation responses with: `python scripts/behavioural_validation.py --config-path config-files/behavioural-validation-prompts.json --output-dir outputs/behavioural-validation`.
+- Generate Ollama-backed behavioural validation responses with: `python scripts/behavioural_validation.py --config-path config-files/behavioural-validation-prompts.json --output-dir outputs/behavioural-validation`; use `config-files/behavioural-validation-full-analysis.json` for the 10-sample-per-model run at temperature `0.7`.
 - There is no committed test, lint, typecheck, formatter, CI, or pre-commit config; do not invent repo-standard verification commands.
 
 ## Runtime Gotchas

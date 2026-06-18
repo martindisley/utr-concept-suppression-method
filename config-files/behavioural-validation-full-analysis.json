@@ -5,7 +5,7 @@
     "utr": "martindisley/unlearning-to-rest:latest"
   },
   "generation": {
-    "temperature": 0.3,
+    "temperature": 0.7,
     "num_predict": 200,
     "samples_per_prompt": 10
   },

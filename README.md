@@ -141,9 +141,16 @@ Python:
 python scripts/behavioural_validation.py --config-path config-files/behavioural-validation-prompts.json --output-dir outputs/behavioural-validation
 ```
 
-The prompt/model defaults are stored in
-`config-files/behavioural-validation-prompts.json`. Generated response files are
-written under `outputs/` and are not intended to be committed by default.
+The fuller validation run uses ten baseline and ten Unlearning to Rest samples
+per prompt at temperature `0.7`:
+
+```bash
+python scripts/behavioural_validation.py --config-path config-files/behavioural-validation-full-analysis.json --output-dir outputs/behavioural-validation-full-analysis
+```
+
+Prompt/model/generation defaults are stored in `config-files/`. Generated
+response files are written under `outputs/` and are not intended to be committed
+by default.
 
 ## Limitations
 
