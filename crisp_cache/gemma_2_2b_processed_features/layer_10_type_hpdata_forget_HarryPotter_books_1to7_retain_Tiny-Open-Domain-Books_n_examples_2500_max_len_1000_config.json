@@ -1,0 +1,10 @@
+{
+    "max_length": 1000,
+    "min_length": 1000,
+    "n_examples": 2500,
+    "forget_dataset_name": "WutYee/HarryPotter_books_1to7",
+    "retain_dataset_name": "Blackroot/Tiny-Open-Domain-Books",
+    "wiki_dataset_name": "wikitext",
+    "wiki_config": "wikitext-2-raw-v1",
+    "retain_type": "book"
+}

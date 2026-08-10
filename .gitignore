@@ -200,4 +200,5 @@ outputs/
 crisp/
 **/gemma_sae_cache/
 **/llama_sae_cache/
-**/crisp_cache/
+# Allow feature caches under 100MB
+!**/crisp_cache/
