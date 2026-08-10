@@ -9,8 +9,8 @@ import random
 
 # Paths
 PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GEMMA_SAE_CACHE_PATH = os.path.join(PROJECT_PATH, "crisp", "gemma_sae_cache")
-LLAMA_3_1_SAE_CACHE_PATH = os.path.join(PROJECT_PATH, "crisp", "llama_sae_cache")
+GEMMA_SAE_CACHE_PATH = os.path.join(PROJECT_PATH, "gemma_sae_cache")
+LLAMA_3_1_SAE_CACHE_PATH = os.path.join(PROJECT_PATH, "llama_sae_cache")
 SAE_LLAMA_3_1_8B = "fnlp/Llama3_1-8B-Base-LXR-8x"
 SAE_GEMMA_2_2B = "google/gemma-2-2b"
 LLAMA_3_1_8B ="meta-llama/Llama-3.1-8B"

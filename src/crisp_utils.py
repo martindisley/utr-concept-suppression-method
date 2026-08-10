@@ -16,12 +16,12 @@ import json
 import numpy as np
 import torch
 from pathlib import Path
-from globals import PROJECT_PATH, LLAMA_3_1_8B, GEMMA_2_2B, SEED
+from src.crisp_globals import PROJECT_PATH, LLAMA_3_1_8B, GEMMA_2_2B, SEED
 import requests
 
-LLAMA_CACHE_DIR = f"{PROJECT_PATH}/crisp/crisp_cache/llama_3_8b_processed_features"
-LLAMA_3_1_CACHE_DIR = f"{PROJECT_PATH}/crisp/crisp_cache/llama_3_1_8b_processed_features"
-GEMMA_CACHE_DIR = f"{PROJECT_PATH}/crisp/crisp_cache/gemma_2_2b_processed_features"
+LLAMA_CACHE_DIR = f"{PROJECT_PATH}/crisp_cache/llama_3_8b_processed_features"
+LLAMA_3_1_CACHE_DIR = f"{PROJECT_PATH}/crisp_cache/llama_3_1_8b_processed_features"
+GEMMA_CACHE_DIR = f"{PROJECT_PATH}/crisp_cache/gemma_2_2b_processed_features"
 
 
 def timeit(func):
