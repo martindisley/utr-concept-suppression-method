@@ -13,7 +13,7 @@ from tqdm.auto import tqdm
 from datasets import load_dataset
 
 from globals import SEED
-from crisp import CRISP
+from src.crisp import CRISP
 
 hp_prompts = [
     "Harry Potter is a student at",

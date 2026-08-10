@@ -7,14 +7,14 @@ import json
 import torch
 from tqdm.auto import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from sae import ModelSaes, EncoderOutput
-from hidden_state_ops import hs_to_logits
+from src.crisp_sae import ModelSaes, EncoderOutput
+from src.crisp_hidden_state_ops import hs_to_logits
 from collections import OrderedDict
 from torch import Tensor
 from functools import partial
 from dataclasses import dataclass
-from globals import LLAMA_3_1_8B, GEMMA_2_2B, SAE_GEMMA_2_2B, SAE_LLAMA_3_1_8B
-from utils import load_cached_features, save_cached_features, print_memory_info
+from src.crisp_globals import LLAMA_3_1_8B, GEMMA_2_2B, SAE_GEMMA_2_2B, SAE_LLAMA_3_1_8B
+from src.crisp_utils import load_cached_features, save_cached_features, print_memory_info
 from peft import PeftModel
 
 

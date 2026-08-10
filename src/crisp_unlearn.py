@@ -13,11 +13,11 @@ from peft import LoraConfig, get_peft_model, TaskType, PeftModel
 import json
 import os
 
-from crisp import CRISP
-from data import genenrate_hp_eval_text, generate_bio_eval_text, generate_cyber_eval_text, DataConfig, wmdp_bio_coherency_prompts, wmdp_cyber_coherency_prompts, hp_coherency_prompts
-from eval import get_mcq_accuracy
-from globals import set_seed, SEED, PROJECT_PATH
-from utils import save_model
+from src.crisp import CRISP
+from src.crisp_data import genenrate_hp_eval_text, generate_bio_eval_text, generate_cyber_eval_text, DataConfig, wmdp_bio_coherency_prompts, wmdp_cyber_coherency_prompts, hp_coherency_prompts
+from src.crisp_eval import get_mcq_accuracy
+from src.crisp_globals import set_seed, SEED, PROJECT_PATH
+from src.crisp_utils import save_model
 
 @dataclass
 class UnlearnConfig:
