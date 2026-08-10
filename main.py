@@ -12,40 +12,15 @@ import json
 import logging
 from datetime import datetime
 
-# Setup logging
+
 def setup_logging(log_level):
+    """Setup logging configuration"""
     logging.basicConfig(
         level=getattr(logging, log_level.upper()),
         format='%(asctime)s - %(levelname)s - %(message)s',
         datefmt='%H:%M:%S'
     )
     return logging.getLogger()
-
-logger = setup_logging("INFO")
-
-# Set HF_TOKEN
-if not os.environ.get('HF_TOKEN'):
-    logger.warning("HF_TOKEN environment variable is NOT SET - model loading will fail")
-else:
-    logger.info("HF_TOKEN is set")
-
-# Import required modules
-logger.info("\n=== Importing modules ===")
-import torch
-from src.crisp_globals import GEMMA_2_2B, LLAMA_3_1_8B
-from src.crisp import CRISP, CRISPConfig
-from src.crisp_unlearn import unlearn_lora, UnlearnConfig
-from src.crisp_data import load_hp_data, HPDataConfig, genenrate_hp_eval_text
-from src.crisp_sae import JumpReLUSAE, TopkSae
-from src.crisp_eval import get_mcq_accuracy
-from src.crisp_utils import load_cached_features, get_feature_tokens
-from src.crisp import LayerFeatures
-
-logger.info(f"Torch version: {torch.__version__}")
-logger.info(f"CUDA available: {torch.cuda.is_available()}")
-if torch.cuda.is_available():
-    logger.info(f"CUDA version: {torch.version.cuda}")
-    logger.info(f"GPU: {torch.cuda.get_device_name(0)}")
 
 
 def load_config(config_path):
@@ -58,6 +33,30 @@ def main(config_path, log_level):
     """Main CRISP execution function"""
     # Setup logging
     logger = setup_logging(log_level)
+    
+    # Set HF_TOKEN
+    if not os.environ.get('HF_TOKEN'):
+        logger.warning("HF_TOKEN environment variable is NOT SET - model loading will fail")
+    else:
+        logger.info("HF_TOKEN is set")
+    
+    # Import required modules (inside main to allow --help to work without torch)
+    logger.info("\n=== Importing modules ===")
+    import torch
+    from src.crisp_globals import GEMMA_2_2B, LLAMA_3_1_8B
+    from src.crisp import CRISP, CRISPConfig
+    from src.crisp_unlearn import unlearn_lora, UnlearnConfig
+    from src.crisp_data import load_hp_data, HPDataConfig, genenrate_hp_eval_text
+    from src.crisp_sae import JumpReLUSAE, TopkSae
+    from src.crisp_eval import get_mcq_accuracy
+    from src.crisp_utils import load_cached_features, get_feature_tokens, save_model
+    from src.crisp import LayerFeatures
+    
+    logger.info(f"Torch version: {torch.__version__}")
+    logger.info(f"CUDA available: {torch.cuda.is_available()}")
+    if torch.cuda.is_available():
+        logger.info(f"CUDA version: {torch.version.cuda}")
+        logger.info(f"GPU: {torch.cuda.get_device_name(0)}")
     
     # Load configuration
     logger.info(f"\n=== Loading config from {config_path} ===")
@@ -187,7 +186,6 @@ def main(config_path, log_level):
     
     # Save adapter if configured
     if output_cfg.get("save_adapter", True):
-        from src.crisp_utils import save_model
         adapter_path = output_cfg.get("adapter_path", "outputs/crisp/gemma-2b-hp")
         logger.info(f"\n=== Saving adapter to {adapter_path} ===")
         configs = {
