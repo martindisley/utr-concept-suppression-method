@@ -168,3 +168,31 @@ This repository supports the paper:
 > Fine-Tuning in Large Language Models.
 
 Full citation details will be added after publication.
+
+---
+
+## CRISP Implementation (Branch: crisp-implementation)
+
+This branch implements the CRISP method for comparison:
+
+- **Original Repository:** https://github.com/technion-cs-nlp/CRISP
+- **Paper:** Ashuach et al. (2025). "CRISP: Persistent Concept Unlearning via Sparse Autoencoders." arXiv:2508.13650
+- **Authors:** Tomer Ashuach, Dana Arad, Aaron Mueller, Martin Tutek, Yonatan Belinkov (Technion)
+
+### Running CRISP
+
+```bash
+python main.py --config-path config-files/crisp-gemma-2b.json --log-level INFO
+```
+
+### CRISP Citation
+
+```bibtex
+@article{ashuach2025crisp,
+  title={CRISP: Persistent Concept Unlearning via Sparse Autoencoders},
+  author={Ashuach, Tomer and Arad, Dana and Mueller, Aaron and Tutek, Martin and Belinkov, Yonatan},
+  journal={arXiv preprint arXiv:2508.13650},
+  year={2025},
+  url={https://arxiv.org/abs/2508.13650},
+}
+```

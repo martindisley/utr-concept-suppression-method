@@ -178,6 +178,7 @@ config-files/*
 !config-files/behavioural-validation-prompts.json
 !config-files/behavioural-validation-full-analysis.json
 !config-files/README.md
+!config-files/crisp-gemma-2b.json
 
 data/*
 !data/README.md
@@ -194,3 +195,9 @@ outputs/
 *.bin
 *.pt
 *.pth
+
+# CRISP caches
+crisp/
+**/gemma_sae_cache/
+**/llama_sae_cache/
+**/crisp_cache/
