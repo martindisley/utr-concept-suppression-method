@@ -7,14 +7,48 @@ import json
 import numpy as np
 import random
 import torch
+from pathlib import Path
 from tqdm.auto import tqdm
+from urllib.error import URLError
+from urllib.request import urlretrieve
 
-from src.crisp_globals import SEED, set_seed
+from src.crisp_globals import PROJECT_PATH, SEED, set_seed
 from src.crisp import CRISP
 
 set_seed()
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+
+UPSTREAM_DATA_REVISION = "30e51dbe0a4d91a0d10a6309af1408e12f2bfad2"
+UPSTREAM_EVALUATION_DATA = {
+    "data/hp/hp_mcq.json",
+    "data/mmlu/mmlu.json",
+    "data/mmlu/mmlu_10.json",
+}
+
+
+def get_evaluation_data_path(relative_path: str) -> Path:
+    """Return a local evaluation file, fetching the pinned CRISP copy if needed."""
+    data_path = Path(PROJECT_PATH) / relative_path
+    if data_path.exists():
+        return data_path
+
+    if relative_path not in UPSTREAM_EVALUATION_DATA:
+        raise FileNotFoundError(f"Evaluation data not found: {data_path}")
+
+    data_path.parent.mkdir(parents=True, exist_ok=True)
+    url = (
+        "https://raw.githubusercontent.com/technion-cs-nlp/CRISP/"
+        f"{UPSTREAM_DATA_REVISION}/crisp/{relative_path}"
+    )
+    try:
+        urlretrieve(url, data_path)
+    except URLError as error:
+        raise FileNotFoundError(
+            f"Evaluation data not found at {data_path}, and download from {url} failed."
+        ) from error
+
+    return data_path
 
 def get_mcq_accuracy(model, type, tokenizer=None, split_data=False, val_ratio=0.5, seed=SEED, batch_size=8,
                         feature_ablation=False, error=False, topk_filter=True, k_features_ablate=None,
@@ -123,6 +157,7 @@ Answer:
     else:
         raise ValueError("Invalid type specified")
 
+    data_path = get_evaluation_data_path(data_path)
     corrects = {}
     with open(data_path, "r") as fp:
         reader = json.load(fp)
