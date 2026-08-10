@@ -16,8 +16,8 @@ from huggingface_hub import snapshot_download
 from natsort import natsorted
 from safetensors.torch import load_model, save_model
 from torch import Tensor, nn
-from globals import GEMMA_SAE_CACHE_PATH, LLAMA_3_1_SAE_CACHE_PATH
-from utils import get_gpu_memory_info
+from src.crisp_globals import GEMMA_SAE_CACHE_PATH, LLAMA_3_1_SAE_CACHE_PATH
+from src.crisp_utils import get_gpu_memory_info
 
 from dataclasses import dataclass
 from simple_parsing import Serializable

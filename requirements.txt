@@ -126,3 +126,7 @@ webencodings==0.5.1
 websocket-client==1.8.0
 widgetsnbextension==4.0.13
 natsort==8.4.0
+simple_parsing==0.1.7
+plotly==6.5.0
+datasets==3.6.0
+peft==0.18.0
