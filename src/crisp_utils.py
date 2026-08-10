@@ -80,9 +80,9 @@ def get_cache_filename(layer: int, data_config):
 
 class CustomUnpickler(pickle.Unpickler):
     def find_class(self, module, name):
-        # Redirect old module paths to new ones
-        if module == 'crisp.crisp':
-            module = 'crisp'  # Use your correct module path
+        # Feature caches from the upstream CRISP repository use these paths.
+        if module in {'crisp', 'crisp.crisp'}:
+            module = 'src.crisp'
         return super().find_class(module, name)
 
 def load_cached_features(layer: int, data_config, model_name: str):
