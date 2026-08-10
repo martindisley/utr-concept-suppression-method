@@ -178,7 +178,7 @@ config-files/*
 !config-files/behavioural-validation-prompts.json
 !config-files/behavioural-validation-full-analysis.json
 !config-files/README.md
-!config-files/crisp-gemma-2b.json
+!config-files/crisp*.json
 
 data/*
 !data/README.md

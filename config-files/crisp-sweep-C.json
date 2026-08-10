@@ -1,0 +1,34 @@
+{
+  "method": "crisp",
+  "base_model": {
+    "base_model_path": "google/gemma-2-2b"
+  },
+  "sae_config": {
+    "sae_layers": [4, 6, 8, 10, 12, 14],
+    "sae_cache_path": "gemma_sae_cache"
+  },
+  "crisp_config": {
+    "learning_rate": 1e-5,
+    "k_features": 25,
+    "alpha": 10,
+    "beta": 0.50,
+    "gamma": 0.01,
+    "batch_size": 4,
+    "lora_rank": 8,
+    "num_epochs": 2
+  },
+  "data": {
+    "forget_dataset": "WutYee/HarryPotter_books_1to7",
+    "retain_dataset": "Blackroot/Tiny-Open-Domain-Books",
+    "n_examples": 2500,
+    "max_length": 1000
+  },
+  "evaluation": {
+    "forget_eval": "hp_mcq",
+    "retain_eval": "mmlu_10"
+  },
+  "output": {
+    "adapter_path": "outputs/crisp/sweep-C-aggressive",
+    "save_adapter": true
+  }
+}
