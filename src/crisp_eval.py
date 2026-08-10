@@ -148,7 +148,7 @@ Answer:
         data_path = "data/wmdp/cyber/high_school_computer_science_mcq.json"
     elif type == "college_cs":
         data_path = "data/wmdp/cyber/college_computer_science_mcq.json"
-    elif type == "hp":
+    elif type in {"hp", "hp_mcq"}:
         data_path = "data/hp/hp_mcq.json"
     elif type == "mmlu":
         data_path = "data/mmlu/mmlu.json"
