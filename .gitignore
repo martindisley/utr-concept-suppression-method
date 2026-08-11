@@ -187,6 +187,7 @@ data/*
 
 models/*
 outputs/
+crisp-results/
 
 # Large derived/model artefacts should never be committed.
 *.npz
