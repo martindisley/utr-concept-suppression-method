@@ -1,0 +1,26 @@
+[project]
+name = "utr-concept-suppression-method"
+version = "0.1.0"
+description = "CRISP concept suppression experiments"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "accelerate==1.11.0",
+    "datasets==3.6.0",
+    "natsort==8.4.0",
+    "numpy==2.3.5",
+    "peft==0.18.0",
+    "plotly==6.5.0",
+    "pyarrow==22.0.0",
+    "regex==2025.11.3",
+    "safetensors==0.6.2",
+    "scikit-learn==1.7.2",
+    "scipy==1.16.3",
+    "simple_parsing==0.1.7",
+    "tokenizers==0.22.1",
+    "torch==2.9.1",
+    "tqdm==4.67.1",
+    "transformers==4.57.1",
+]
+
+[tool.uv]
+package = false
