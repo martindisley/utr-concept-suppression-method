@@ -46,7 +46,15 @@ def main(config_path, log_level):
     from src.crisp_globals import GEMMA_2_2B, LLAMA_3_1_8B
     from src.crisp import CRISP, CRISPConfig
     from src.crisp_unlearn import unlearn_lora, UnlearnConfig
-    from src.crisp_data import load_hp_data, HPDataConfig, genenrate_hp_eval_text
+    from src.crisp_data import (
+        load_hp_data,
+        HPDataConfig,
+        CustomDataConfig,
+        load_custom_data,
+        format_chat_text,
+        get_corpus_id,
+        genenrate_hp_eval_text,
+    )
     from src.crisp_sae import JumpReLUSAE, TopkSae
     from src.crisp_eval import get_mcq_accuracy
     from src.crisp_utils import load_cached_features, get_feature_tokens, save_model
@@ -93,9 +101,10 @@ def main(config_path, log_level):
     start_time = time.time()
     model_name_short = "gemma" if "gemma" in base_model_path else "llama"
     crisp_config = CRISPConfig(
-        layers=sae_layers, 
-        model_name=model_name_short, 
-        bf16=True
+        layers=sae_layers,
+        model_name=base_model_path,
+        bf16=True,
+        max_length=data_cfg.get("max_length", 1024),
     )
     crisp = CRISP(crisp_config)
     model_load_time = time.time() - start_time
@@ -104,17 +113,42 @@ def main(config_path, log_level):
     # Load data
     logger.info(f"\n=== Loading data ===")
     start_time = time.time()
-    data_config = HPDataConfig(
-        n_examples=data_cfg["n_examples"],
-        retain_type="book"
-    )
-    data = load_hp_data(
-        n_examples=data_config.n_examples,
-        benign=data_config.retain_type,
-        max_len=data_cfg["max_length"]
-    )
+    is_custom = data_cfg.get("type") == "custom"
+    if is_custom:
+        data_config = CustomDataConfig(
+            forget_path=data_cfg["forget_path"],
+            retain_path=data_cfg["retain_path"],
+            eval_forget_path=data_cfg.get("eval_forget_path", ""),
+            eval_retain_path=data_cfg.get("eval_retain_path", ""),
+            corpus_id=get_corpus_id(data_cfg["forget_path"], data_cfg["retain_path"]),
+            n_examples=data_cfg["n_examples"],
+            max_length=data_cfg["max_length"],
+        )
+        data = load_custom_data(data_config)
+        data["forget"] = [
+            format_chat_text(crisp.tokenizer, record["prompt"], record["completion"])
+            for record in data["forget_records"]
+        ]
+        data["retain"] = [
+            format_chat_text(crisp.tokenizer, record["prompt"], record["completion"])
+            for record in data["retain_records"]
+        ]
+        data["coherency"] = [
+            format_chat_text(crisp.tokenizer, prompt)
+            for prompt in data["coherency"]
+        ]
+    else:
+        data_config = HPDataConfig(
+            n_examples=data_cfg["n_examples"],
+            retain_type="book"
+        )
+        data = load_hp_data(
+            n_examples=data_config.n_examples,
+            benign=data_config.retain_type,
+            max_len=data_cfg["max_length"]
+        )
     data_load_time = time.time() - start_time
-    logger.info(f"Loaded {len(data['forget'])} HP examples and {len(data['retain'])} retain examples in {data_load_time:.1f}s")
+    logger.info(f"Loaded {len(data['forget'])} forget examples and {len(data['retain'])} retain examples in {data_load_time:.1f}s")
     
     # Process features
     logger.info(f"\n=== Processing features ===")
@@ -123,7 +157,7 @@ def main(config_path, log_level):
         text_target=data['forget'],
         text_benign=data['retain'],
         data_config=data_config,
-        batch_size=8
+        batch_size=data_cfg.get("feature_batch_size", 8)
     )
     feature_time = time.time() - start_time
     logger.info(f"Feature processing completed in {feature_time:.1f}s")
@@ -142,7 +176,8 @@ def main(config_path, log_level):
         batch_size=crisp_cfg["batch_size"],
         lora_rank=crisp_cfg["lora_rank"],
         num_epochs=crisp_cfg["num_epochs"],
-        data_type="hp",
+        data_type=data_cfg.get("data_type", "hp"),
+        coherency_texts=data.get("coherency"),
         verbose=True
     )
     
@@ -151,6 +186,20 @@ def main(config_path, log_level):
     unlearn_time = time.time() - start_time
     logger.info(f"Unlearning completed in {unlearn_time:.1f}s")
     
+    if is_custom:
+        if output_cfg.get("save_adapter", True):
+            adapter_path = output_cfg.get("adapter_path", "outputs/crisp/custom")
+            logger.info(f"\n=== Saving adapter to {adapter_path} ===")
+            configs = {
+                "crisp_config": crisp_config.to_dict(),
+                "unlearn_config": uconfig.to_dict(),
+                "data_config": data_config.to_dict(),
+            }
+            save_model(crisp.model, configs=configs, path=adapter_path, tokenizer=crisp.tokenizer)
+            logger.info(f"Adapter saved to {adapter_path}")
+        logger.info("Custom run complete. Use the chair evaluation script for behavioral evaluation.")
+        return
+
     # Evaluate
     logger.info(f"\n=== Evaluation ===")
     logger.info("-" * 50)

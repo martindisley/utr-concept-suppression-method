@@ -112,22 +112,26 @@ class LayerFeatures:
 @dataclass
 class CRISPConfig:
     layers: List[int]
-    model_name: Literal["gemma", "llama_3_1", "llama"]
+    model_name: str
     bf16: bool = True
     saes_model_name: str = None
+    max_length: int = 1024
 
     def __post_init__(self):
         model_name_lower = self.model_name.lower()
 
-        if model_name_lower == "gemma" or self.model_name == GEMMA_2_2B:
+        if model_name_lower == "gemma":
             self.model_name = GEMMA_2_2B
+        elif model_name_lower.startswith("google/gemma-2-2b"):
+            # Preserve the exact checkpoint while selecting the Gemma SAE family.
+            self.model_name = self.model_name
         elif model_name_lower == "llama_3_1" or model_name_lower == "llama" or self.model_name == LLAMA_3_1_8B:
             self.model_name = LLAMA_3_1_8B
         else:
             raise ValueError(f"Unsupported model name: {self.model_name}. Supported models are 'llama', 'gemma', and 'llama_3_1'.")
 
         # Set SAE model name
-        if self.model_name == GEMMA_2_2B:
+        if self.model_name.startswith("google/gemma-2-2b"):
             self.saes_model_name = SAE_GEMMA_2_2B
         elif self.model_name == LLAMA_3_1_8B:
             self.saes_model_name = SAE_LLAMA_3_1_8B
@@ -139,7 +143,8 @@ class CRISPConfig:
             "model_name": self.model_name,
             "layers": self.layers,
             "saes_model_name": self.saes_model_name,
-            "bf16": self.bf16
+            "bf16": self.bf16,
+            "max_length": self.max_length,
         }
 
     def __str__(self):
@@ -160,7 +165,7 @@ class CRISP:
         self.tokenizer = AutoTokenizer.from_pretrained(config.model_name)
         self.tokenizer.pad_token = self.tokenizer.eos_token
         self.model = AutoModelForCausalLM.from_pretrained(config.model_name, device_map='auto', torch_dtype=torch.bfloat16 if config.bf16 else torch.float32)
-        self.model.config.use_cache = False if config.model_name == GEMMA_2_2B else True  # Gemma 2 has a bug with use_cache=True
+        self.model.config.use_cache = False if config.model_name.startswith("google/gemma-2-2b") else True
         self.device_model = torch.device(self.model.device)
 
         self.features_dict = {}
@@ -195,7 +200,8 @@ class CRISP:
             handle.remove()
         self.hook_handles = []
 
-    def tokenize(self, text, max_len=1024):
+    def tokenize(self, text, max_len=None):
+        max_len = max_len or self.config.max_length
         return self.tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=max_len).to(self.device_model)
 
     def get_model_outputs(self, inputs, requires_grad=False):

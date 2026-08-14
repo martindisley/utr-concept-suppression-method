@@ -184,6 +184,10 @@ data/*
 !data/README.md
 !data/chair-concept-def.json
 !data/chair-simplified-sample.json
+!data/chair-crisp-spec.json
+!data/chair-corpus/
+!data/chair-corpus/*.jsonl
+data/chair-corpus/generation_log.jsonl
 
 models/*
 outputs/

@@ -15,6 +15,7 @@ SAE_LLAMA_3_1_8B = "fnlp/Llama3_1-8B-Base-LXR-8x"
 SAE_GEMMA_2_2B = "google/gemma-2-2b"
 LLAMA_3_1_8B ="meta-llama/Llama-3.1-8B"
 GEMMA_2_2B = "google/gemma-2-2b"
+GEMMA_2_2B_IT = "google/gemma-2-2b-it"
 
 SEED = 0
 

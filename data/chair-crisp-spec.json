@@ -1,0 +1,151 @@
+{
+  "spec_version": "1.0",
+  "target_concept": "physical_chair",
+  "description": "All physical objects designed for a single person to sit on with back support, excluding mobility/medical equipment context where wheelchair is the primary framing",
+
+  "forget_scope": {
+    "description": "Examples that should be suppressed - all describe physical chairs",
+    "included_subtypes": [
+      "dining chairs",
+      "office chairs",
+      "armchairs",
+      "recliners",
+      "rocking chairs",
+      "high chairs",
+      "gaming chairs",
+      "salon chairs",
+      "folding chairs",
+      "thrones",
+      "wheelchairs",
+      "stools with backrests",
+      "desk chairs",
+      "accent chairs",
+      "lounge chairs",
+      "bean bag chairs",
+      "kneeling chairs",
+      "bar stools with backs"
+    ],
+    "description_elements": [
+      "backrest",
+      "seat",
+      "legs",
+      "armrests",
+      "upholstery",
+      "cushioning",
+      "frame",
+      "base",
+      "swivel",
+      "recline mechanism",
+      "height adjustment",
+      "lumbar support"
+    ],
+    "contexts": [
+      "product descriptions",
+      "furniture catalogs",
+      "interior design specifications",
+      "3D asset briefs",
+      "manufacturing descriptions",
+      "purchase recommendations",
+      "ergonomic evaluations",
+      "historical descriptions",
+      "style guides",
+      "material specifications"
+    ],
+    "excluded_senses": [
+      "academic chair position",
+      "chairing a meeting",
+      "chairperson titles"
+    ]
+  },
+
+  "retain_scope": {
+    "description": "Examples that should be preserved - seating and furniture that is NOT a chair",
+    "seating_types": [
+      "benches",
+      "stools without backrests",
+      "sofas",
+      "couches",
+      "sectionals",
+      "loveseats",
+      "chaise lounges",
+      "beds",
+      "daybeds",
+      "floor cushions",
+      "poufs",
+      "ottomans",
+      "vehicle seats",
+      "aircraft seats",
+      "bicycle saddles",
+      "motorcycle seats",
+      "stadium seating",
+      "theater seating",
+      "pews",
+      "hammocks"
+    ],
+    "other_furniture": [
+      "tables",
+      "desks",
+      "cabinets",
+      "shelves",
+      "bookcases",
+      "dressers",
+      "nightstands",
+      "sideboards",
+      "lamps",
+      "mirrors",
+      "rugs"
+    ],
+    "general_concepts": [
+      "posture and ergonomics not chair-specific",
+      "interior design principles",
+      "furniture manufacturing (non-chair)",
+      "upholstery techniques",
+      "woodworking",
+      "spatial arrangement"
+    ]
+  },
+
+  "generation_guidelines": {
+    "format": "free-form natural language descriptions",
+    "style": "object descriptions suitable for 3D generation prompts",
+    "length_range": {
+      "min_words": 50,
+      "max_words": 200
+    },
+    "forget_instructions": [
+      "Describe physical objects people sit on with back support",
+      "Include specific details about materials, dimensions, colors, and construction",
+      "Cover all listed subtypes including wheelchairs",
+      "Use varied vocabulary: some explicit (chair), some indirect (seating with back)",
+      "Write as product descriptions, catalog entries, or 3D briefs",
+      "Do NOT include academic positions or meeting leadership contexts"
+    ],
+    "retain_instructions": [
+      "Describe seating WITHOUT backrests for single-person use (stools)",
+      "Describe multi-person seating (sofas, benches, couches)",
+      "Describe non-seating furniture (tables, cabinets, lamps)",
+      "Match the descriptive style and length of forget examples",
+      "Use similar technical vocabulary (materials, finishes, dimensions)",
+      "Do NOT describe wheelchairs in retain set"
+    ]
+  },
+
+  "evaluation_categories": {
+    "forget_direct": "Explicit chair identification questions",
+    "forget_indirect": "Indirect descriptions without using 'chair'",
+    "forget_subtypes": "Questions about specific chair types",
+    "forget_functional": "Requests for seating recommendations that imply chairs",
+    "retain_seating": "Questions about benches, stools, sofas, vehicle seats",
+    "retain_furniture": "Questions about tables, cabinets, lamps, other non-chair furniture",
+    "retain_general": "General knowledge unrelated to furniture"
+  },
+
+  "target_counts": {
+    "pilot_forget": 250,
+    "pilot_retain": 250,
+    "full_forget": 2500,
+    "full_retain": 2500,
+    "eval_forget": 100,
+    "eval_retain": 100
+  }
+}

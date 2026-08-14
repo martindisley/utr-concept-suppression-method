@@ -55,6 +55,9 @@ def get_cache_filename(layer: int, data_config):
         params.append(f"forget_{forget_name}")
         params.append(f"retain_{retain_name}")
 
+    if hasattr(data_config, 'corpus_id'):
+        params.append(f"corpus_{data_config.corpus_id}")
+
 
     elif hasattr(data_config, 'forget_type') and hasattr(data_config, 'retain_type'):
         # WMDPDataConfig specific parameters
@@ -94,8 +97,8 @@ def load_cached_features(layer: int, data_config, model_name: str):
     # Select cache directory based on model name
     if LLAMA_3_1_8B == model_name:
         cache_dir = LLAMA_3_1_CACHE_DIR
-    elif GEMMA_2_2B == model_name:
-        cache_dir = GEMMA_CACHE_DIR
+    elif model_name.startswith("google/gemma-2-2b"):
+        cache_dir = os.path.join(GEMMA_CACHE_DIR, model_name.split("/")[-1])
     else:
         raise ValueError(f"Unknown model type: {model_name}. Cannot determine cache directory.")
 
@@ -117,8 +120,8 @@ def save_cached_features(layer: int, data_config, features, model_name: str):
     # Select cache directory based on model name
     if LLAMA_3_1_8B == model_name:
         cache_dir = LLAMA_3_1_CACHE_DIR
-    elif GEMMA_2_2B == model_name:
-        cache_dir = GEMMA_CACHE_DIR
+    elif model_name.startswith("google/gemma-2-2b"):
+        cache_dir = os.path.join(GEMMA_CACHE_DIR, model_name.split("/")[-1])
     else:
         raise ValueError(f"Unknown model type: {model_name}. Cannot determine cache directory.")
 

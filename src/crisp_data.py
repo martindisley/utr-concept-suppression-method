@@ -7,6 +7,7 @@ from typing import Optional, List, Dict, Union
 import os
 import json
 import re
+import hashlib
 import torch
 import numpy as np
 from tqdm.auto import tqdm
@@ -175,6 +176,92 @@ class DataConfig:
             "min_length": self.min_length,
             "n_examples": self.n_examples
         }
+
+
+@dataclass
+class CustomDataConfig(DataConfig):
+    """Configuration for a local concept corpus."""
+
+    forget_path: str = ""
+    retain_path: str = ""
+    eval_forget_path: str = ""
+    eval_retain_path: str = ""
+    corpus_id: str = "chair-v1"
+
+    def to_dict(self):
+        return {
+            "forget_path": self.forget_path,
+            "retain_path": self.retain_path,
+            "eval_forget_path": self.eval_forget_path,
+            "eval_retain_path": self.eval_retain_path,
+            "corpus_id": self.corpus_id,
+            "max_length": self.max_length,
+            "min_length": self.min_length,
+            "n_examples": self.n_examples,
+        }
+
+
+def _read_jsonl(path: str) -> list[dict]:
+    records = []
+    with open(path) as file:
+        for line_number, line in enumerate(file, 1):
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if not isinstance(record.get("prompt"), str) or not isinstance(record.get("completion"), str):
+                raise ValueError(f"Invalid corpus record at {path}:{line_number}")
+            records.append(record)
+    return records
+
+
+def get_corpus_id(*paths: str) -> str:
+    digest = hashlib.sha256()
+    for path in paths:
+        with open(path, "rb") as file:
+            digest.update(file.read())
+    return digest.hexdigest()[:16]
+
+
+def load_custom_data(config: CustomDataConfig) -> Dict[str, List[str]]:
+    """Load matched prompt/completion examples for a custom CRISP run."""
+    forget_records = _read_jsonl(config.forget_path)
+    retain_records = _read_jsonl(config.retain_path)
+    n_examples = config.n_examples or min(len(forget_records), len(retain_records))
+    if n_examples <= 0:
+        raise ValueError("Custom corpus must contain at least one example")
+
+    forget_records = forget_records[:n_examples]
+    retain_records = retain_records[:n_examples]
+    if len(forget_records) != len(retain_records):
+        raise ValueError("Forget and retain corpora must have equal lengths")
+
+    data = {
+        "forget_records": forget_records,
+        "retain_records": retain_records,
+        "forget": [f"{r['prompt']}\n\n{r['completion']}" for r in forget_records],
+        "retain": [f"{r['prompt']}\n\n{r['completion']}" for r in retain_records],
+        "coherency": [r["prompt"] for r in retain_records[: min(100, len(retain_records))]],
+    }
+    if config.eval_forget_path and config.eval_retain_path:
+        data["eval_forget"] = _read_jsonl(config.eval_forget_path)
+        data["eval_retain"] = _read_jsonl(config.eval_retain_path)
+    return data
+
+
+def format_chat_text(tokenizer, prompt: str, completion: str | None = None) -> str:
+    """Apply the model's chat template to one user/assistant example."""
+    messages = [{"role": "user", "content": prompt}]
+    if completion is not None:
+        messages.append({"role": "assistant", "content": completion})
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=completion is None,
+    )
+    # CRISP tokenization adds special tokens separately; avoid duplicating BOS.
+    if tokenizer.bos_token and text.startswith(tokenizer.bos_token):
+        text = text[len(tokenizer.bos_token):]
+    return text
 
 
 @dataclass

@@ -23,7 +23,8 @@ from src.crisp_utils import save_model
 class UnlearnConfig:
     """Configuration for unlearning process"""
 
-    data_type: str # hp, bio, or cyber
+    data_type: str # hp, bio, cyber, or custom
+    coherency_texts: List[str] = None
 
     # Learning parameters
     learning_rate: float = 1e-5
@@ -46,7 +47,7 @@ class UnlearnConfig:
     verbose: str = None
 
     def __post_init__(self):
-        assert self.data_type in ["hp", "bio", "cyber"]
+        assert self.data_type in ["hp", "bio", "cyber", "custom"]
 
         if self.verbose:
             self.verbose = self.data_type
@@ -67,6 +68,7 @@ class UnlearnConfig:
             "save_model": self.save_model,
             "save_path": self.save_path,
             "data_type": self.data_type,
+            "coherency_texts": self.coherency_texts,
             "verbose": self.verbose,
         }
 
@@ -356,14 +358,16 @@ def unlearn_lora(crisp: CRISP, text_target, text_benign, config: UnlearnConfig, 
 
             # Coherency loss - always enabled
             # Select coherency prompts based on target type
-            if config.data_type == "cyber":
+            if config.data_type == "custom":
+                coherency_prompts = config.coherency_texts or text_benign
+            elif config.data_type == "cyber":
                 coherency_prompts = wmdp_cyber_coherency_prompts
             elif config.data_type == "hp":
                 coherency_prompts = hp_coherency_prompts
             elif config.data_type == "bio":
                 coherency_prompts = wmdp_bio_coherency_prompts
             else:
-                raise ValueError(f"Unknown data type: {config.data_type}. Valid options: ['hp', 'bio', 'cyber']")
+                raise ValueError(f"Unknown data type: {config.data_type}. Valid options: ['hp', 'bio', 'cyber', 'custom']")
 
             text_idx = batch_idx % len(coherency_prompts)
             coher_text = coherency_prompts[text_idx]
