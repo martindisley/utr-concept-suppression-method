@@ -1,0 +1,39 @@
+{
+  "method": "crisp",
+  "base_model": {
+    "base_model_path": "google/gemma-2-2b-it"
+  },
+  "sae_config": {
+    "sae_layers": [4, 6, 8, 10, 12, 14],
+    "sae_cache_path": "gemma_sae_cache"
+  },
+  "crisp_config": {
+    "learning_rate": 3e-5,
+    "k_features": 20,
+    "alpha": 5,
+    "beta": 0.9,
+    "gamma": 0.01,
+    "batch_size": 1,
+    "lora_rank": 4,
+    "num_epochs": 3
+  },
+  "data": {
+    "type": "custom",
+    "data_type": "custom",
+    "forget_path": "data/chair-corpus/forget.jsonl",
+    "retain_path": "data/chair-corpus/retain.jsonl",
+    "eval_forget_path": "data/chair-corpus/eval_forget.jsonl",
+    "eval_retain_path": "data/chair-corpus/eval_retain.jsonl",
+    "n_examples": 250,
+    "max_length": 512,
+    "feature_batch_size": 1
+  },
+  "evaluation": {
+    "forget_eval": "chair_forget",
+    "retain_eval": "chair_retain"
+  },
+  "output": {
+    "adapter_path": "outputs/crisp/gemma-2b-it-chair-strong",
+    "save_adapter": true
+  }
+}
