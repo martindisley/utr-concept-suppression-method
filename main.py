@@ -175,6 +175,7 @@ def main(config_path, log_level):
         gamma=crisp_cfg["gamma"],
         batch_size=crisp_cfg["batch_size"],
         lora_rank=crisp_cfg["lora_rank"],
+        lora_layers=crisp_cfg.get("lora_layers"),
         num_epochs=crisp_cfg["num_epochs"],
         data_type=data_cfg.get("data_type", "hp"),
         coherency_texts=data.get("coherency"),

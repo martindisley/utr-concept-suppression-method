@@ -39,6 +39,7 @@ class UnlearnConfig:
 
     # Lora parameters
     lora_rank: int = 4
+    lora_layers: List[int] = None
 
     # Model saving
     save_model: bool = False  # Whether to save the model after unlearning
@@ -65,6 +66,7 @@ class UnlearnConfig:
             "beta": self.beta,
             "gamma": self.gamma,
             "lora_rank": self.lora_rank,
+            "lora_layers": self.lora_layers,
             "save_model": self.save_model,
             "save_path": self.save_path,
             "data_type": self.data_type,
@@ -299,6 +301,7 @@ def unlearn_lora(crisp: CRISP, text_target, text_benign, config: UnlearnConfig, 
         # Configure LoRA
         target_modules = ['down_proj', 'gate_proj', 'up_proj', 'q_proj', 'v_proj', 'k_proj', 'o_proj']
 
+        lora_layers = config.lora_layers or list(range(3, 10))
         lora_config = LoraConfig(
             init_lora_weights=True,
             task_type=TaskType.CAUSAL_LM,
@@ -306,7 +309,7 @@ def unlearn_lora(crisp: CRISP, text_target, text_benign, config: UnlearnConfig, 
             lora_alpha=2*config.lora_rank,
             bias="none",
             target_modules=target_modules,
-            layers_to_transform=list(range(3, 10)),
+            layers_to_transform=lora_layers,
             lora_dropout=0.05,
         )
 

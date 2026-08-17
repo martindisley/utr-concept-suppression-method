@@ -72,6 +72,34 @@ Review the results for:
   retained objects;
 - general output coherence and formatting.
 
+## Layer-Coverage Experiment
+
+`config-files/crisp-chair-gemma-2b-it-layer14.json` is the next experiment
+after the overly weak baseline and overly disruptive strong run. It keeps the
+same corpus and SAE layers, but changes the trainable LoRA layer coverage from
+the historical default of `3-9` to `3-14`.
+
+This matters because the selected SAE layers include `10`, `12`, and `14`.
+With LoRA limited to `3-9`, the optimization can only influence those later
+representations indirectly. The layer-coverage experiment attaches LoRA to the
+attention and MLP projections at every selected SAE layer, while using an
+intermediate unlearning strength (`beta=0.95`, two epochs) to reduce the broad
+text corruption observed with the strong run.
+
+Run and evaluate it with:
+
+```bash
+uv run python main.py \
+  --config-path config-files/crisp-chair-gemma-2b-it-layer14.json \
+  --log-level INFO
+
+uv run python scripts/evaluate_chair_adapter.py \
+  outputs/crisp/gemma-2b-it-chair-layer14
+```
+
+LoRA layers `3-14` add modest adapter memory at rank 4. Keep the batch size at
+1 and the maximum sequence length at 512 for the first run.
+
 ## Recovery
 
 Feature extraction is cached by model family, exact corpus hash, and layer.

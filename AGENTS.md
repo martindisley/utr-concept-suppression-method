@@ -13,6 +13,7 @@
 - Interactive chat with a CRISP adapter: `python scripts/chat_crisp_adapter.py outputs/crisp/gemma-2b-hp`.
 - Generate Ollama-backed behavioural validation: `python scripts/behavioural_validation.py --config-path config-files/behavioural-validation-prompts.json --output-dir outputs/behavioural-validation`.
 - Run the chair CRISP experiment: `uv run python main.py --config-path config-files/crisp-chair-gemma-2b-it.json --log-level INFO`.
+- Run the layer-coverage chair experiment: `uv run python main.py --config-path config-files/crisp-chair-gemma-2b-it-layer14.json --log-level INFO`.
 - Evaluate the chair adapter: `uv run python scripts/evaluate_chair_adapter.py outputs/crisp/gemma-2b-it-chair`.
 - No test, lint, typecheck, formatter, CI, or pre-commit config exists; do not invent verification commands.
 
